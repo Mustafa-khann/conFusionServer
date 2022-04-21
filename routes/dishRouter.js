@@ -83,8 +83,8 @@ dishRouter.route('/:dishId/comments')
         if(dish != null)
         {
             res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(dish.comments);
+            res.setHeader('Content-Type', 'application/json');
+            res.json(dish.comments);
         }
         else
         {
@@ -107,7 +107,7 @@ dishRouter.route('/:dishId/comments')
                   res.statusCode = 200;
                   res.setHeader('Content-Type', 'application/json'); 
                   res.json(dish); 
-            })
+            }), err => next(err);
         }
         else
         {

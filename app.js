@@ -1,7 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
-var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var buffer = require('buffer');
 var session = require('express-session');
@@ -14,10 +13,9 @@ var promoRouter = require('./routes/promoRouter')
 var leaderRouter = require('./routes/leaderRouter')
 var app = express();
 
+
 const mongoose = require('mongoose');
 const Dishes = require('./models/dishes');
-const { signedCookie } = require('cookie-parser');
-const { signedCookies } = require('cookie-parser');
 
 const url = 'mongodb://localhost:27017/conFusion';
 const connect = mongoose.connect(url);

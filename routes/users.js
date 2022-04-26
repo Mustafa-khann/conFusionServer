@@ -15,21 +15,27 @@ router.get('/', function(req, res, next) {
 router.post('/signup', (req,res,next) =>{
   User.findOne({username: req.body.username})
   .then((User) => {
-    if(User != NULL)
-    {
-      var err = new Error('User' + req.body.username + ' already exists!');
-      err.statusCode = 403;
-      next(err);
+    if(User != null){
+      res.status(400).json({message: 'Username already exists'});
     }
     else{
-      return User.create({user: req.body.username, password: req.body.password});
+      User.create(req.body)
+      .then((user) => {
+        res.status(201).json({
+          message: 'User created',
+          userId: user._id
+        });
+      })
+      .catch((err) => {
+        next(err);
+      });
     }
   }).then((user) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     res.json({status: 'User ' + req.body.username + ' was created'})
     , (err) => next(err)
-  .catch((err) => next(err));
+  .catch((err) => next(err))
 });
 });
 router.post('/login', (req,res,next) =>  {  
@@ -65,11 +71,11 @@ router.post('/login', (req,res,next) =>  {
       res.end('Logged in');
     }
   }) 
-  .catch((err) => next(err));
+  .catch((err) => next(err))
 }
 else 
 {
-  if(req.session.user === 'Authenticated User') 
+  if(req.session.user === 'Authenticated') 
   {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');

@@ -39,7 +39,7 @@ app.use(session({
 }));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/users', usersRouter)
 function auth (req, res, next) {
   console.log(req.session);
 
@@ -49,7 +49,7 @@ if(!req.session.user) {
     return next(err);
 }
 else {
-  if (req.session.user === 'authenticated') {
+  if (req.session.user === 'Authenticated') {
     next();
   }
   else {
@@ -59,9 +59,10 @@ else {
   }
 }
 }
+
 app.use(auth);
 
-
+// endpoints
 app.use('/dishes', dishRouter)
 app.use('/promotions', promoRouter)
 app.use('/leaders', leaderRouter)

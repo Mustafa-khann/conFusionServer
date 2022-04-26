@@ -9,7 +9,7 @@ router.use(bodyParser.json());
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+  res.send('Hello there! Please respond with a resource');
 });
 
 router.post('/signup', (req,res,next) =>{
@@ -59,21 +59,41 @@ router.post('/login', (req,res,next) =>  {
       next(err);
     }
     else if (user.username === user && user.password === pass) {
-      req.session.user = 'admin';
+      req.session.user = 'Authenticated';
       res.statusCode = 200;
       res.setHeader('Content-Type', 'application/json');
-      res.json({status: 'You are logged in as ' + user.username})
+      res.end('Logged in');
     }
-    if (user === 'admin' && pass === 'password') {
-      req.session.user = 'admin';
-      next(); // authorized
-  } else {
-      var err = new Error('You are not authenticated!');
-      res.setHeader('WWW-Authenticate', 'Basic');      
-      err.status = 401;
-      next(err);
-  }
   }) 
+  .catch((err) => next(err));
 }
+else 
+{
+  if(req.session.user === 'Authenticated User') 
+  {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end('You are already logged in');
+  }
+  else
+  {
+    var err = new Error('You are not authenticated!');
+    res.setHeader('WWW-Authenticate', 'Basic');      
+    err.status = 401;
+    next(err);
+  }
+}
+});
+
+router.get('/logout', (req,res) => {
+  if(req.session) {
+    req.session.destroy();
+    res.clearCookie('session-id');
+    res.redirect('/');
+  }
+  else {
+    var err = new Error('You are not logged in!');
+    err.status = 403;
+  }
 });
 module.exports = router;

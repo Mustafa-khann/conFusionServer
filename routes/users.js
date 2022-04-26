@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
-router.post('/signup', function(req,res,next) {
+router.post('/signup', (req,res,next) =>{
   User.findOne({username: req.body.username})
   .then((User) => {
     if(User != NULL)
@@ -32,6 +32,7 @@ router.post('/signup', function(req,res,next) {
   .catch((err) => next(err));
 });
 });
-router.post('/login', function(req,res,next) {  
+router.post('/login', (req,res,next) =>  {  
+  
 });
 module.exports = router;

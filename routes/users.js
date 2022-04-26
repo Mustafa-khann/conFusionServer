@@ -11,21 +11,18 @@ router.use(bodyParser.json());
 router.get('/', function(req, res, next) {
   res.send('Hello there! Please respond with a resource');
 });
-
 router.post('/signup', (req,res,next) =>{
   User.findOne({username: req.body.username})
   .then((User) => {
     if(User != null){
-      res.status(400).json({message: 'Username already exists'});
+var err = new Error('User ' + req.body.username + ' already exists!');
+err.status = 403;
+next(err);
     }
     else{
-      User.create(req.body)
-      .then((user) => {
-        
-      })
-      .catch((err) => {
-        next(err);
-      });
+      return User.create({
+        username: req.body.username,
+        password: req.body.password});
     }
   }).then((user) => {
     res.statusCode = 200;
@@ -34,7 +31,8 @@ router.post('/signup', (req,res,next) =>{
     , (err) => next(err)
   .catch((err) => next(err))
 });
-});
+}
+);
 router.post('/login', (req,res,next) =>  {  
   if(!req.session.user) {
     var authHeader = req.headers.authorization;

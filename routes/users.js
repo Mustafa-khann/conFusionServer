@@ -53,6 +53,17 @@ router.post('/login', (req,res,next) =>  {
       err.statusCode = 403;
       next(err);
     }
+    else if (user.password !== pass) {
+      var err = new Error('Wrong password!');
+      err.statusCode = 403;
+      next(err);
+    }
+    else if (user.username === 'admin' && user.password === 'password') {
+      req.session.user = 'admin';
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.json({status: 'You are logged in as ' + user.username})
+    }
     if (user === 'admin' && pass === 'password') {
       req.session.user = 'admin';
       next(); // authorized

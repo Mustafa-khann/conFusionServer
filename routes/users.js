@@ -1,6 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var User = require('../models/user')
+var User = require('../models/user');
+const { status } = require('express/lib/response');
 
 var router = express.Router();
 router.use(bodyParser.json());
@@ -23,6 +24,14 @@ router.post('/signup', function(req,res,next) {
     else{
       return User.create({user: req.body.username, password: req.body.password});
     }
-  }).catch((err) => next(err));
+  }).then((user) => {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json({status: 'User ' + req.body.username + ' was created'})
+    , (err) => next(err)
+  .catch((err) => next(err));
+});
+});
+router.post('/login', function(req,res,next) {  
 });
 module.exports = router;

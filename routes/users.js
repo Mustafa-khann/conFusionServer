@@ -40,10 +40,8 @@ router.post('/login', (req,res,next) =>  {
       var err = new Error('You are not authenticated!');
       res.setHeader('WWW-Authenticate', 'Basic');
       err.status = 401;
-      next(err);
-      return;
+      return next(err);
   }
-
   var auth = new Buffer.from(authHeader.split(' ')[1], 'base64').toString().split(':');
   var user = auth[0];
   var pass = auth[1];

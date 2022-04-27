@@ -11,27 +11,28 @@ router.use(bodyParser.json());
 router.get('/', function(req, res, next) {
   res.send('Hello there! Please respond with a resource');
 });
-router.post('/signup', (req,res,next) =>{
+router.post('/signup', (req, res, next) => {
   User.findOne({username: req.body.username})
-  .then((User) => {
-    if(User != null){
-    var err = new Error('User ' + req.body.username + ' already exists!');
-    err.status = 403;
-    next(err);
+  .then((user) => {
+    if(user != null) {
+      var err = new Error('User ' + req.body.username + ' already exists!');
+      err.status = 403;
+      next(err);
     }
-    else{
+    else {
       return User.create({
         username: req.body.username,
         password: req.body.password});
     }
-  }).then((user) => {
+  })
+  .then((user) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
-    res.json({status: 'User ' + req.body.username + ' was created'})
-    , (err) => next(err)
-  .catch((err) => next(err))
+    res.json({status: 'Registration Successful!', user: user});
+  }, (err) => next(err))
+  .catch((err) => next(err));
 });
-})
+
 router.post('/login', (req, res, next) => {
 
   if(!req.session.user) {
@@ -76,8 +77,8 @@ router.post('/login', (req, res, next) => {
   }
 })
 
-router.get('/logout', (req,res) => {
-  if(req.session) {
+router.get('/logout', (req, res) => {
+  if (req.session) {
     req.session.destroy();
     res.clearCookie('session-id');
     res.redirect('/');
@@ -85,6 +86,8 @@ router.get('/logout', (req,res) => {
   else {
     var err = new Error('You are not logged in!');
     err.status = 403;
+    next(err);
   }
 });
+
 module.exports = router;

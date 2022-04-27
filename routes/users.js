@@ -74,8 +74,7 @@ else
   if(req.session.user === 'Authenticated') 
   {
     res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json');
-    res.end('You are already logged in');
+    res.setHeader('Content-Type', 'text/plain');
   }
   else
   {

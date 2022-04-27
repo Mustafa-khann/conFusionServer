@@ -69,22 +69,12 @@ router.post('/login', (req, res, next) => {
     })
     .catch((err) => next(err));
   }
-else 
-{
-  if(req.session.user === 'Authenticated') 
-  {
+  else {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'text/plain');
+    res.end('You are already authenticated!');
   }
-  else
-  {
-    var err = new Error('You are not authenticated!');
-    res.setHeader('WWW-Authenticate', 'Basic');      
-    err.status = 401;
-    next(err);
-  }
-}
-});
+})
 
 router.get('/logout', (req,res) => {
   if(req.session) {

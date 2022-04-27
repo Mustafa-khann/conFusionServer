@@ -64,7 +64,6 @@ function auth (req, res, next) {
       next(err);
   }
 }
-
 app.use(auth);
 
 // endpoints

@@ -8,7 +8,7 @@ router.use(bodyParser.json());
 
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
+  router.get('/', function(req, res, next) {
   res.send('Hello there! Please respond with a resource');
 });
 router.post('/signup', (req, res, next) => {

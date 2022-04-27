@@ -38,8 +38,7 @@ app.use(session({
   store: new FileStore()
 }));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter)
+
 function auth (req, res, next) {
   console.log(req.session);
 
@@ -63,6 +62,8 @@ else {
 app.use(auth);
 
 // endpoints
+app.use('/', indexRouter);
+app.use('/users', usersRouter)
 app.use('/dishes', dishRouter)
 app.use('/promotions', promoRouter)
 app.use('/leaders', leaderRouter)

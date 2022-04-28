@@ -57,7 +57,8 @@ function auth (req, res, next) {
   var pass = auth[1];
   if (user == 'admin' && pass == 'password') {
       next(); // authorized
-  } else {
+  } 
+  else {
       var err = new Error('You are not authenticated!');
       res.setHeader('WWW-Authenticate', 'Basic');      
       err.status = 401;

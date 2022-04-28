@@ -5,20 +5,20 @@ var logger = require('morgan');
 var buffer = require('buffer');
 var session = require('express-session');
 var FileStore = require('session-file-store')(session);
-
+//Routes
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var dishRouter = require('./routes/dishRouter')
 var promoRouter = require('./routes/promoRouter')
 var leaderRouter = require('./routes/leaderRouter')
 var app = express();
-
+//ODM
 const mongoose = require('mongoose');
 const Dishes = require('./models/dishes');
-
+//Database Connection
 const url = 'mongodb://localhost:27017/conFusion';
 const connect = mongoose.connect(url);
-
+//Assurance of Connection to the DB
 connect.then(db => {
   console.log('Connected Correctly to the Server');
 },(err) => {console.log(err)});

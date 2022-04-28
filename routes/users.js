@@ -34,7 +34,6 @@ router.post('/signup', (req, res, next) => {
 });
 
 router.post('/login', (req, res, next) => {
-
   if(!req.session.user) {
     var authHeader = req.headers.authorization;
     

@@ -20,9 +20,8 @@ router.post('/signup', (req, res, next) => {
       next(err);
     }
     else {
-      return User.create({
-        username: req.body.username,
-        password: req.body.password});
+      return User.create
+      ({username: req.body.username,password: req.body.password});
     }
   })
   .then((user) => {

@@ -1,7 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var User = require('../models/user');
-const { status } = require('express/lib/response');
+var passport = require('passport');
 
 var router = express.Router();
 router.use(bodyParser.json());

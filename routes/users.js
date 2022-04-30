@@ -13,7 +13,7 @@ router.use(bodyParser.json());
 });
 router.post('/signup', (req, res, next) => {
   User.register(new User({username: req.body.username}),
-    req.body.password, (err, user) => {
+    req.body.password, (err, User) => {
       if(err) {
         res.statusCode = 500;
         res.setHeader('Content-Type', 'application/json');
@@ -27,12 +27,6 @@ router.post('/signup', (req, res, next) => {
         });
       }
     })
-  .then((user) => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json');
-    res.json({status: 'Registration Successful!', user: user});
-  }, (err) => next(err))
-  .catch((err) => next(err));
 });
 
 router.post('/login', passport.authenticate('local'), (req,res) => {

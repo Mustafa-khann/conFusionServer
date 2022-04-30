@@ -12,21 +12,21 @@ router.use(bodyParser.json());
   res.send('Hello there! Please respond with a resource');
 });
 router.post('/signup', (req, res, next) => {
-  User.register(new User({username: req.body.username}), 
-  req.body.password, (err, user) => {
-    if(err) {
-      return res.statusCode(500).
-      json({err: err}).
-      res.headers('Content-type', 'application/json');
-    }
-    else {
-      passport.authenticate('local')(req, res, () => {
-        return res.statusCode(200).
-        json({success: true, status: 'Registration Successful!'}).
+  User.register(new User({username: req.body.username}),
+    req.body.password, (err, user) => {
+      if(err) {
+        res.statusCode = 500;
         res.setHeader('Content-Type', 'application/json');
-      });
-    }
-  })
+        res.json({err: err});
+      }
+      else {
+        passport.authenticate('local')(req, res, () => {
+          res.statusCode = 200;
+          res.setHeader('Content-Type', 'application/json');
+          res.json({success: true, status: 'Registration Successful!'});
+        });
+      }
+    })
   .then((user) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');

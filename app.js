@@ -17,6 +17,7 @@ var app = express();
 //ODM
 const mongoose = require('mongoose');
 const Dishes = require('./models/dishes');
+const { appendFile } = require('fs');
 //Database Connection
 const url = 'mongodb://localhost:27017/conFusion';
 const connect = mongoose.connect(url);
@@ -39,32 +40,21 @@ app.use(session({
   resave: false,
   store: new FileStore()
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 function auth (req, res, next) {
-  console.log(req.headers);
-  var authHeader = req.headers.authorization;
-  if (!authHeader) {
-      var err = new Error('You are not authenticated!');
-      res.setHeader('WWW-Authenticate', 'Basic');
-      err.status = 401;
-      next(err);
-      return;
+ 
+  if(!req.user) {
+    var err = new Error('You are not authenticated!');
+    err.status = 403;
+    return next(err);
   }
-
-  var auth = new Buffer.from(authHeader.split(' ')[1], 'base64').toString().split(':');
-  var user = auth[0];
-  var pass = auth[1];
-  if (user == 'admin' && pass == 'password') {
-      next(); // authorized
-  } 
   else {
-      var err = new Error('You are not authenticated!');
-      res.setHeader('WWW-Authenticate', 'Basic');      
-      err.status = 401;
-      next(err);
+      next();
   }
 }
 app.use(auth);

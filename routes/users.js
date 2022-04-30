@@ -21,8 +21,8 @@ router.post('/signup', (req, res, next) => {
     }
     else {
       passport.authenticate('local')(req, res, () => {
-        return res.status(200).
-        json({status: 'Registration Successful!'}).
+        return res.statusCode(200).
+        json({success: true, status: 'Registration Successful!'}).
         res.setHeader('Content-Type', 'application/json');
       });
     }

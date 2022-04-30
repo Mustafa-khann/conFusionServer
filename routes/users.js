@@ -15,11 +15,15 @@ router.post('/signup', (req, res, next) => {
   User.register(new User({username: req.body.username}), 
   req.body.password, (err, user) => {
     if(err) {
-      return res.status(500).json({err: err}).res.headers('Content-type', 'application/json');
+      return res.status(500).
+      json({err: err}).
+      res.headers('Content-type', 'application/json');
     }
     else {
       passport.authenticate('local')(req, res, () => {
-        return res.status(200).json({status: 'Registration Successful!'});
+        return res.status(200).
+        json({status: 'Registration Successful!'}).
+        res.setHeader('Content-Type', 'application/json');
       });
     }
   })

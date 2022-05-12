@@ -24,7 +24,7 @@ exports.jwtPassport = passport.use(new JwtStrategy(opts, function(jwt_payload, d
 {
     
     console.log("JWT payload: ", jwt_payload);
-    User.findOne({id: jwt_payload.sub}, (err, user) => 
+    User.findOne({_id: jwt_payload._id}, (err, user) => 
     {
         if(err) 
         {
@@ -40,3 +40,5 @@ exports.jwtPassport = passport.use(new JwtStrategy(opts, function(jwt_payload, d
         }
     })
 }));
+
+exports.verifyUser = passport.authenticate('jwt', {session: false});

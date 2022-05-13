@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const Dishes = require('../models/dishes');
-
+const authenticate = require('../authenticate');
 const dishRouter = express.Router();
 dishRouter.use(bodyParser.json())
 
@@ -16,7 +16,7 @@ dishRouter.route('/')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post((req,res,next) => {
+.post(authenticate.verifyUser, (req,res,next) => {
     Dishes.create(req.body.params)
     .then((dish) => {
         console.log("Dish Created " + dish);

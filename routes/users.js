@@ -12,8 +12,7 @@ router.use(bodyParser.json());
   res.send('Hello there! Please respond with a resource');
 });
 router.post('/signup', (req, res, next) => {
-  User.register(new User({username: req.body.username}),
-    req.body.password, (err, User) => {
+  User.register(new User({username: req.body.username}), req.body.password, (err, User) => {      
       if(err) {
         res.statusCode = 500;
         res.setHeader('Content-Type', 'application/json');

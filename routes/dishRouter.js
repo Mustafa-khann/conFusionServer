@@ -104,12 +104,18 @@ dishRouter.route('/:dishId/comments')
     .then((dish) => {
         if(dish != null)
         {
+            req.body.author = req.user._id;
             dish.comments.push(req.body);
             dish.save()
             .then((dish) => {
-                  res.statusCode = 200;
+                Dishes.findById(dish._id)
+                    .populate('comments.author')
+                    .then((dish) => {
+                        res.statusCode = 200;
                   res.setHeader('Content-Type', 'application/json'); 
-                  res.json(dish); 
+                  res.json(dish)
+                    })
+                  ; 
             }), err => next(err);
         }
         else
@@ -153,6 +159,7 @@ dishRouter.route('/:dishId/comments')
 dishRouter.route('/:dishId/comments/:commentId')
 .get((req,res,next) => {
     Dishes.findById(req.params.dishId)
+    .populate('comments.author')
     .then((dish) => {
         if(dish != null && dish.comments.id(req.params.commentId) != null)
         {

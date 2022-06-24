@@ -202,9 +202,13 @@ dishRouter.route('/:dishId/comments/:commentId')
             }
             dish.save()
             .then ((dish) => {
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
-                res.json(dish);
+                Dishes.findById(dish._id)
+                    .populate('comments.author')
+                    .then((dish) => {
+                        res.statusCode = 200;
+                        res.setHeader('Content-Type', 'application/json');
+                        res.json(dish);
+                    })
             })
         }
         else if(dish == null)

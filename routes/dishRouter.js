@@ -244,7 +244,7 @@ dishRouter.route('/:dishId/comments/:commentId')
                         res.setHeader('Content-Type', 'application/json');
                         res.json(dish);
                     })
-           }) 
+           }, (err) => next(err));
         }}
         else if(dish == null)
         {

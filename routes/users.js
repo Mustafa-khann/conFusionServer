@@ -34,7 +34,7 @@ router.post('/signup', (req, res, next) => {
             res.setHeader('Content-Type', 'application/json');
             res.json({success: true, status: 'Registration Successful!'});
           });
-        }
+        });
       }
     });
 });

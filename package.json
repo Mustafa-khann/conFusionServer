@@ -16,5 +16,19 @@
     "mongoose-currency": "^0.2.0",
     "morgan": "~1.9.0",
     "serve-favicon": "~2.4.5"
-  }
+  },
+  "main": "app.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mustafa-khann/conFusionServer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mustafa-khann/conFusionServer/issues"
+  },
+  "homepage": "https://github.com/Mustafa-khann/conFusionServer#readme",
+  "description": ""
 }

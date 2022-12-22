@@ -3,19 +3,18 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "nodemon ./bin/www"
   },
   "dependencies": {
+    "body-parser": "^1.20.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
-    "express": "~4.16.1",
+    "express": "^4.18.2",
     "http-errors": "~1.6.3",
-    "jade": "^1.9.2",
-    "morgan": "~1.9.1"
-  },
-  "main": "app.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+    "jade": "^0.31.2",
+    "mongoose": "^6.8.1",
+    "mongoose-currency": "^0.2.0",
+    "morgan": "~1.9.1",
+    "nodemon": "^2.0.20"
+  }
 }

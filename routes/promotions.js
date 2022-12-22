@@ -3,27 +3,27 @@ const mongoose = require('mongoose');
 
 const bodyParser = require('body-parser');
 
-const dishRouter = express.Router();
-const Dishes = require('../models/dishes');
+const promotionRouter = express.Router();
+const Promotions = require('../models/promotions');
 
-dishRouter.use(bodyParser.json());
+promotionRouter.use(bodyParser.json());
 
-dishRouter.route('/')
+promotionRouter.route('/')
 .get((req,res,next) => {
-     Dishes.find({})
-     .then((dishes) => {
+     Promotions.find({})
+     .then((promotions) => {
         res.statusCode = 200;
         res.contentType("Content-Type", "application/json");
-        res.json(dishes);
+        res.json(promotions);
      }, (err) => next(err))
     .catch((err) => next(err));
 })
 .post((req,res,next) => {
-      Dishes.create(req.body)
-      .then((dish) => {
+      Promotions.create(req.body)
+      .then((promotions) => {
          res.statusCode = 200;
          res.contentType('Content-type', 'application/json');
-         res.json(dish);
+         res.json(promotions);
       }, (err) => next(err))
     .catch((err) => next(err));
 })
@@ -32,7 +32,7 @@ dishRouter.route('/')
    res.send('PUT operation isn\'t supported');
 })
 .delete((req,res,next) => {
-   Dishes.remove({})
+   Promotions.deleteMany({})
    .then((resp) => {
       res.statusCode = 200;
       res.contentType('Content-type', 'application/json');
@@ -41,13 +41,13 @@ dishRouter.route('/')
     .catch((err) => next(err));
 })
 
-dishRouter.route('/:dishId')
+promotionRouter.route('/:promotionId')
 .get((req,res,next) => {
-   Dishes.findById(req.params.dishId)
-   .then((dish) => {
+   Promotions.findById(req.params.promotionId)
+   .then((promotion) => {
       res.statusCode = 200;
       res.contentType('Content-type', 'application/json');
-      res.json(dish);
+      res.json(promotion);
    }, (err) => next(err))
    .catch((err) => next(err));
 })
@@ -56,16 +56,16 @@ dishRouter.route('/:dishId')
    res.send('POST operations isn\'t supported on this endpoint');
 })
 .put((req,res,next) => {
-   Dishes.findByIdAndUpdate(req.params.dishId, {$set: req.body}, {new: true})
-   .then((updatedDish) => {
+   Promotions.findByIdAndUpdate(req.params.promotionId, {$set: req.body}, {new: true})
+   .then((updatedPromotion) => {
       res.statusCode = 200;
       res.contentType('Content-type', 'application/json');
-      res.json(updatedDish);
+      res.json(updatedPromotion);
    }, (err) => next(err))
    .catch((err) => next(err));
 })
 .delete((req,res,next) => {
-   Dishes.findByIdAndRemove(req.params.dishId)
+   Promotions.findByIdAndRemove(req.params.promotionId)
    .then((resp) => {
       res.statusCode = 200;
       res.contentType('Content-type', 'application/json');
@@ -74,4 +74,4 @@ dishRouter.route('/:dishId')
    .catch((err) => next(err));
 })
 
-module.exports = dishRouter;
+module.exports = promotionRouter;

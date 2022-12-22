@@ -21,8 +21,9 @@ connect.then((db) => {
 
 // Routes Handlers
 var indexRouter = require('./routes/index'),
-    usersRouter = require('./routes/users'),
-    dishRouter = require('./routes/dishRouter');
+    usersRouter = require('./routes/usersRouter'),
+    dishRouter = require('./routes/dishRouter'),
+    promotionsRouter = require('./routes/promotions.js');
 
 var app = express();
 
@@ -42,6 +43,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/dishes', dishRouter);
+app.use('/promotions', promotionsRouter);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

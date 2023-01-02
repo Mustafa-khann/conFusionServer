@@ -27,6 +27,22 @@ var indexRouter = require('./routes/index'),
 
 var app = express();
 
+// Basic authentication function 
+function auth(req,res,next)
+{
+  console.log(req.headers);
+  var authHeaders = req.headers.authorization;
+  if(!authHeaders)
+  {
+    var err = new Error('You are not authenticated');
+    res.setHeaders('WWW-authenticate', 'Basic');
+    err.statusCode = 401;
+    next(err);
+    return;
+  }
+
+  
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 // tempelating engine

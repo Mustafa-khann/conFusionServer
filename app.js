@@ -3,7 +3,9 @@ cookieParser = require('cookie-parser'),
 express = require('express'),
 path = require('path'),
 cookieParser = require('cookie-parser'),
-logger = require('morgan');
+logger = require('morgan'),
+session = require('express-session'),
+FileStore = require('session-file-store')(session);
 
 
 const MongoClient = require('mongodb').MongoClient,
@@ -29,12 +31,18 @@ const { signedCookies } = require('cookie-parser');
 var app = express();
 
 app.use(cookieParser('hello-there'));
-
+app.use(session({
+  name: 'admin',
+  secret: 'this is the secret',
+  saveUninitialized: false,
+  resave: false,
+  // store: new FileStore()
+}));
 // Basic authentication function 
 function auth(req,res,next)
 {
-if(!req.signedCookies.user){
-  console.log(req.headers);
+  console.log(req.session);
+if(!req.session.user){
   var authHeaders = req.headers.authorization;
   if(!authHeaders)
   {
@@ -64,8 +72,9 @@ if(!req.signedCookies.user){
 }
 else
 {
-  if(req.signedCookies.user == 'admin')
+  if(req.session.user == 'admin')
   {
+    console.log('req.session: ',req.session);
     next();
   }
   else

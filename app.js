@@ -26,8 +26,6 @@ var indexRouter = require('./routes/index'),
     usersRouter = require('./routes/usersRouter'),
     dishRouter = require('./routes/dishRouter'),
     promotionsRouter = require('./routes/promotions.js');
-const { signedCookies } = require('cookie-parser');
-
 var app = express();
 
 app.use(cookieParser('hello-there'));
@@ -38,52 +36,33 @@ app.use(session({
   resave: false,
   // store: new FileStore()
 }));
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
+
 // Basic authentication function 
 function auth(req,res,next)
 {
   console.log(req.session);
-if(!req.session.user){
-  var authHeaders = req.headers.authorization;
-  if(!authHeaders)
-  {
-    var err = new Error('You are not authenticated');
-    res.setHeader('WWW-Authenticate', 'Basic');
-    err.status = 401;
-    next(err);
-    return;
-  }
-
-  var auth = new Buffer.from(authHeaders.split(' ')[1], 'base64').toString().split(':');
-  var username = auth[0];
-  var password = auth[1];
-
-  if(username=='admin' && password=='pass')
-  {
-    next();
+  if(!req.session.user){
+      var err = new Error('You are not authenticated');
+      res.setHeader('WWW-Authenticate', 'Basic');
+      err.status = 401;
+      return next(err);
   }
   else
   {
-    var err = new Error('You are not authenticated');
-    res.setHeader('WWW-authenticate', 'Basic');
-    err.status = 401;
-    next(err);
-    return;
-  }
-}
-else
-{
-  if(req.session.user == 'admin')
-  {
-    console.log('req.session: ',req.session);
-    next();
-  }
-  else
-  {
-    var err = new Error('You are not authenticated');
-    err.status = 401;
-    next(err);
-  }
-}}
+    if(req.session.user == 'authenticated')
+    {
+      console.log('req.session: ',req.session);
+      next();
+    }
+    else
+    {
+      var err = new Error('You are not authenticated');
+      err.status = 403;
+      next(err);
+    }
+  }}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -101,8 +80,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(auth);
 
 // Routes middleware
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+
 app.use('/dishes', dishRouter);
 app.use('/promotions', promotionsRouter);
 

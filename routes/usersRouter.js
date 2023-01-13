@@ -10,7 +10,7 @@ router.get('/', (req,res,next) => {
     res.send('respond with a resource');
 });
 
-router.post('signup', (req,res,next) => {
+router.post('/signup', (req,res,next) => {
     User.findOne({username: req.body.username})
     .then((user) => {
         if(user != null)
@@ -69,7 +69,7 @@ router.post('/login', (req,res,next) => {
             req.session.user = 'authenticated';
             res.statusCode = 200;
             res.setHeader('Content-Type', 'text/plain');
-            res.end('You are not authenticated!')
+            res.end('You are logged in!')
             next();
         }
         else
@@ -90,7 +90,7 @@ router.post('/login', (req,res,next) => {
     }
 });
 
-router.get('logout', (req,res) => {
+router.get('/logout', (req,res) => {
     if(req.session)
     {
         req.session.destroy();

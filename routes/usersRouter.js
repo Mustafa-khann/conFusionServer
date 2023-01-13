@@ -1,85 +1,96 @@
-var express = require('express');
+var express = require('express'),
+    bodyParser = require('body-parser'),
+    User = require('../models/users'),
+    router = express.Router();
 
-var usersRouter = express.Router();
-const Users = require('../models/users');
-const users = require('../models/users');
-const { Router } = require('express');
+router.use(bodyParser.json());
 
-usersRouter.post('/signup', (req,res,next) => {
-    Users.find({username: req.body.username})
+
+router.get('/', (req,res,next) => {
+    res.send('respond with a resource');
+});
+
+router.post('signup', (req,res,next) => {
+    User.findOne({username: req.body.username})
     .then((user) => {
         if(user != null)
         {
-            var err = new Error('User already exists!');
+            var err = new Error (req.body.username, ' already exists!');
             err.status = 403;
-            next(err)
+            next(err);
+        }
+        else{
+            return User.create({
+                username: req.body.username,
+                password: req.body.password,
+            })
+        }
+    })
+    .then((user) => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json({status: 'Registration Successful', user: user});
+    }, (err) => next(err))
+    .catch((err) => next(err));
+});
+
+router.post('/login', (req,res,next) => {
+
+    if(!req.session.user){
+        var authHeaders = req.headers.authorization;
+        if(!authHeaders)
+        {
+          var err = new Error('You are not authenticated');
+          res.setHeader('WWW-Authenticate', 'Basic');
+          err.status = 401;
+          next(err);
+          return;
+        }
+      
+        var auth = new Buffer.from(authHeaders.split(' ')[1], 'base64').toString().split(':');
+        var username = auth[0];
+        var password = auth[1];
+      User.findOne({username: username})
+      .then((user) => {
+        if(user === null)
+        {
+            var err = new Error('User doesn\'t exist!');
+            err.status = 404;
+            next(err);
+        }
+        else if(user.password !== password)
+        {
+            var err = new Error('Incorrect Password!');
+            err.status = 403;
+            next(err);
+        }
+        else if(username == username && password == password)
+        {
+            req.session.user = 'authenticated';
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'text/plain');
+            res.end('You are not authenticated!')
+            next();
         }
         else
         {
-            return Users.create({
-                username: req.body.username,
-                password: req.body.password
-            })
-            .then((user) => {
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
-                res.json({status: 'Registration Successful!', user: user})
-            }, (err) => next(err))
-            .catch((err) => next(err));
+          var err = new Error('You are not authenticated');
+          res.setHeader('WWW-authenticate', 'Basic');
+          err.status = 401;
+          return next(err);
         }
-    })
-});
-
-usersRouter.post('/login', (req,res,next) => {
-    if(!req.session.user)
-    {
-        var authHeader = req.headers.authorization;
-
-        if(!authHeader)
-        {
-            var err = new Error('You are not authenticted!');
-            res.setHeader('WWW-authenticate', 'Basic');
-            err.status = 403;
-            return next(err)
-        }
-
-        var auth = new Buffer.from(authHeader.split(' ')[1], 'base64').toString().split(':');
-        var username = auth[0];
-        var password = auth[1];
-
-        Users.findOne({username: username})
-        .then((user) => {
-            if(user == null)
-            {
-                var err = new Error('User ',username,' doesn\'t exist!');
-                err.status = 403;
-                next(err)
-            }
-            else if(user.password != password)
-            {
-                var err = new Error('Incorrect password!');
-                err.status = 403;
-                next(err)
-            }
-            else if(user.username === username && user.password === password)
-            {
-                req.session.user = 'authenticated';
-                res.statusCode = 200;
-                res.setHeader('Content-type', 'application/json');
-                res.end('You are authenticated');
-            }
-        })
-        .catch((err) => next(err))
+      })
+      .catch((err) => next(err));
     }
     else
     {
         res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
+        res.setHeader('Content-Type', 'text/plain');
         res.end('You are already logged in!');
     }
-})
+});
 
-usersRouter.get('/logout', (req,res) => {
+router.get('logout', (req,res) => {
     if(req.session)
     {
         req.session.destroy();
@@ -88,9 +99,10 @@ usersRouter.get('/logout', (req,res) => {
     }
     else
     {
-        var err = new Error('You are already Logged out!');
+        var err = new Error('You are already logged out!');
         err.status = 403;
-        next(err)
+        next(err);
     }
 });
-module.exports = usersRouter;
+
+module.exports = router;

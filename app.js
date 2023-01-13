@@ -5,6 +5,7 @@ path = require('path'),
 cookieParser = require('cookie-parser'),
 logger = require('morgan'),
 session = require('express-session'),
+passport = require('passport'),
 FileStore = require('session-file-store')(session);
 
 
@@ -12,6 +13,7 @@ const MongoClient = require('mongodb').MongoClient,
 mongoose = require('mongoose');
 mongoose.set('strictQuery', true);
 
+var authenticate = require('./authenticate');
 const Dishes = require('./models/dishes');
 
 // mongoDB connection and setup
@@ -34,35 +36,29 @@ app.use(session({
   secret: 'this is the secret',
   saveUninitialized: false,
   resave: false,
-  // store: new FileStore()
+  store: new FileStore()
 }));
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 // Basic authentication function 
 function auth(req,res,next)
 {
-  console.log(req.session);
-  if(!req.session.user){
-      var err = new Error('You are not authenticated');
-      res.setHeader('WWW-Authenticate', 'Basic');
-      err.status = 401;
-      return next(err);
+  console.log(req.user);
+  
+  if(!req.user) {
+    var err = new Error('You are not authenticated!');
+    err.status = 403;
+    next(err)
   }
   else
   {
-    if(req.session.user == 'authenticated')
-    {
-      console.log('req.session: ',req.session);
-      next();
-    }
-    else
-    {
-      var err = new Error('You are not authenticated');
-      err.status = 403;
-      next(err);
-    }
-  }}
+    next();
+  }
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -80,7 +76,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(auth);
 
 // Routes middleware
-
 app.use('/dishes', dishRouter);
 app.use('/promotions', promotionsRouter);
 

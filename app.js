@@ -6,7 +6,8 @@ cookieParser = require('cookie-parser'),
 logger = require('morgan'),
 session = require('express-session'),
 passport = require('passport'),
-FileStore = require('session-file-store')(session);
+FileStore = require('session-file-store')(session),
+config = require('./config');
 
 
 const MongoClient = require('mongodb').MongoClient,
@@ -17,7 +18,7 @@ var authenticate = require('./authenticate');
 const Dishes = require('./models/dishes');
 
 // mongoDB connection and setup
-const uri = "mongodb://127.0.0.1:27017/conFusion";
+const uri = config.mongoUrl;
 const connect = mongoose.connect(uri);
 connect.then((db) => {
   console.log('Correctly connected to database');
@@ -40,7 +41,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-
+//  route handlers
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
